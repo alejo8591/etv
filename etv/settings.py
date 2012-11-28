@@ -2,7 +2,7 @@
 import dj_database_url
 import os
 ROOT_CONF = os.path.dirname(os.path.realpath(__file__))
-__version__ = '0.0.9'
+__version__ = '0.0.1'
 __status__ = 'alpha'
 
 DEBUG = True
@@ -18,10 +18,10 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
         'NAME': 'etv',                      # Or path to database file if using sqlite3.
-        'USER': 'root',                      # Not used with sqlite3.
+        'USER': 'postgres',                      # Not used with sqlite3.
         'PASSWORD': '3193115',                  # Not used with sqlite3.
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+        'PORT': '5432',                      # Set to empty string for default. Not used with sqlite3.
     }
 }
 
@@ -98,6 +98,8 @@ TEMPLATE_DIRS = (
     # Don't forget to use absolute paths, not relative paths.
 )
 
+AUTH_PROFILE_MODULE = 'users.UserProfile'
+
 INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -105,11 +107,13 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # Uncomment the next line to enable the admin:
+    'grappelli',
     'django.contrib.admin',
-    # Uncomment the next line to enable admin documentation:
-    # 'django.contrib.admindocs',
+    'south',
+    'users',
 )
+
+GRAPPELLI_ADMIN_TITLE = "elevatusventas.com %s" % (__version__)
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
