@@ -48,7 +48,7 @@ class UserProfile(models.Model):
     lastName     = models.CharField(max_length=60, help_text="Ingrese su(s) Apellido(s)", verbose_name="Apellido(s)")
     disabled     = models.BooleanField(default=False)
     city         = models.CharField(max_length=60, choices= CITY, help_text="Ciudad donde vive", verbose_name="Ciudad")
-    dateOfBirth  = models.DateField(help_text="Ciudad donde vive", verbose_name="Ciudad")
+    dateOfBirth  = models.DateField(help_text="Ciudad donde vive", verbose_name="Fecha de Nacimiento")
     phone        = models.CharField(max_length=60, help_text="Número de Telefono de contacto", verbose_name="Telefono")
     mobile       = models.CharField(max_length=60, help_text="Número de Telefono móvil de contacto", verbose_name="Telefono móvil")
     alternativePhone = models.CharField(max_length=60, help_text="Número de Telefono o FAX", verbose_name="Telefono/FAX")
