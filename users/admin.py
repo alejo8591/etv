@@ -15,6 +15,10 @@ class UserProfileInline(admin.StackedInline):
 # Define a new User admin
 class UserAdmin(UserAdmin):
     inlines = (UserProfileInline, )
+    def get_form(self, request, obj=None, **kwargs):
+        self.exclude = []
+        if not request.user.is_superuser: self.exclude.append('field_to_hide')
+        return super(UserAdmin, self).get_form(request, obj, **kwargs) 
 
 # Re-register UserAdmin
 admin.site.unregister(User)
