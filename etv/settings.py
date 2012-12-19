@@ -2,7 +2,7 @@
 import dj_database_url
 import os
 ROOT_CONF = os.path.dirname(os.path.realpath(__file__))
-__version__ = '0.0.1'
+__version__ = '0.0.2'
 __status__ = 'alpha'
 
 DEBUG = True
@@ -62,6 +62,7 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 #    'django.contrib.staticfiles.finders.DefaultStorageFinder',
+    'dajaxice.finders.DajaxiceFinder',
 )
 
 # Make this unique, and don't share it with anybody.
@@ -71,7 +72,7 @@ SECRET_KEY = 'upc4l*ymox@7b9-w*imwoybm@+_0h&amp;_wcuxzrz1z1(zod5dj5z'
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
-#     'django.template.loaders.eggs.Loader',
+    'django.template.loaders.eggs.Loader',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -105,6 +106,8 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'grappelli',
     'django.contrib.admin',
+    'dajax',
+    'dajaxice',
     'south',
     'users',
 )
@@ -139,3 +142,13 @@ LOGGING = {
         },
     }
 }
+
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.contrib.auth.context_processors.auth',
+    'django.core.context_processors.debug',
+    'django.core.context_processors.i18n',
+    'django.core.context_processors.media',
+    'django.core.context_processors.static',
+    'django.core.context_processors.request',
+    'django.contrib.messages.context_processors.messages'
+)
