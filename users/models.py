@@ -15,31 +15,36 @@ class UserProfile(models.Model):
         ('Medellin','Medellin'),        
     )
     identification = models.OneToOneField(djangoauth.User)
-    refFranchisee = models.ForeignKey('self', help_text="Usuario Franqiciado que lo referencia", verbose_name="Franquiciado Referenciado")
-    firstName    = models.CharField(max_length=60, help_text="Ingrese su(s) Nombre(s)", verbose_name="Nombre(s)")
-    lastName     = models.CharField(max_length=60, help_text="Ingrese su(s) Apellido(s)", verbose_name="Apellido(s)")
-    disabled     = models.BooleanField(default=False)
-    city         = models.CharField(max_length=60, choices= CITY, help_text="Ciudad donde vive", verbose_name="Ciudad")
-    dateOfBirth  = models.DateField(help_text="Ciudad donde vive", verbose_name="Fecha de Nacimiento")
-    phone        = models.CharField(max_length=60, help_text="Número de Telefono de contacto", verbose_name="Telefono")
-    mobile       = models.CharField(max_length=60, help_text="Número de Telefono móvil de contacto", verbose_name="Telefono móvil")
+    refFranchisee  = models.ForeignKey('self', help_text="Usuario Franqiciado que lo referencia", verbose_name="Franquiciado Referenciado")
+    firstName      = models.CharField(max_length=60, help_text="Ingrese su(s) Nombre(s)", verbose_name="Nombre(s)")
+    lastName       = models.CharField(max_length=60, help_text="Ingrese su(s) Apellido(s)", verbose_name="Apellido(s)")
+    disabled       = models.BooleanField(default=False)
+    city           = models.CharField(max_length=60, choices= CITY, help_text="Ciudad donde vive", verbose_name="Ciudad")
+    dateOfBirth    = models.DateField(help_text="Ciudad donde vive", verbose_name="Fecha de Nacimiento")
+    phone          = models.CharField(max_length=60, help_text="Número de Telefono de contacto", verbose_name="Telefono")
+    mobile         = models.CharField(max_length=60, help_text="Número de Telefono móvil de contacto", verbose_name="Telefono móvil")
     alternativePhone = models.CharField(max_length=60, help_text="Número de Telefono o FAX", verbose_name="Telefono/FAX")
-    address      = models.CharField(max_length=60, help_text="Dirección de Residencia", verbose_name="Dirección")
-    lastAccess   = models.DateTimeField(default=datetime.now, editable=False)
+    address        = models.CharField(max_length=60, help_text="Dirección de Residencia", verbose_name="Dirección")
+    lastAccess     = models.DateTimeField(default=datetime.now, editable=False)
     #user activation through product registration
-    activationKey= models.CharField(max_length=60, editable=False)
-    keyExpires   = models.DateTimeField(editable=False)
+    activationKey  = models.CharField(max_length=60, editable=False)
+    keyExpires     = models.DateTimeField(editable=False)
     
     class Meta:
         ordering = ['firstName']
     
     def __unicode__(self):
             return self.firstName
+    # Saving franchisee regarding whether or not referenced
+    def save(self, *args, **kwargs):
+        r = UserProfile.objects.all()
+        if(len(r)==0): id=1
+        super(UserProfile, self).save(*args, **kwargs)
         
 def createUser(sender, instance, created, **kwargs):
         if created:
            profile = UserProfile()
-           profile.userIDNumber = instance
+           profile.identification = instance
            profile.save
             
 post_save.connect(createUser, sender=djangoauth.User)
