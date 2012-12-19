@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+    <html>
+        <head>
+            <meta content="utf-8">
+            <title>{{ title }}</title>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <link rel="stylesheet" type="text/css" href="/static/assets/css/bootstrap.min.css" />
+            <script src="/static/assets/js/bootstrap.min.js"></script>
+            	{% block extrajs %}
+                {% endblock %}
+        </head>
+        <body>
+            <div class="container-fluid">
+                <div class="span10">
+                <form method='post' action='/thanks/'>{% csrf_token %}
+                <fieldset>
+                    <legend>{{ legend }}</legend>
+                    {{ form.non_field_errors }}
+                    <div class="fieldWrapper">
+                        {{ form.identification.errors }}
+                        <label  for="id_identification">Cedula o Identificación</label>
+                            {{form.identification}}
+                    </div>
+                    <div class="fieldWrapper">
+                        {{ form.email.errors }}
+                        <label  for="id_identification">Correo electronico</label>
+                            {{form.email}}
+                    </div>
+                    <div class="fieldWrapper">
+                        {{ form.passwordOne.errors }}
+                        <label  for="id_identification">Contraseña</label>
+                            {{form.passwordOne}}
+                    </div>
+                    <div class="fieldWrapper">
+                        {{ form.passwordTwo.errors }}
+                        <label  for="id_identification">Verificación Contraseña</label>
+                            {{form.passwordTwo}}
+                    </div>
+                    <div class="fieldWrapper">
+                        {{ form.franchiseeCode.errors }}
+                        <label  for="id_identification">Código de Referencia</label>
+                            {{form.franchiseeCode}}
+                    </div>
+                    <input class="btn btn-primary" type='submit' value="Registarme!" />
+                </fieldset>
+                </form>
+                </div>
+            </div>
+        </body>
+    </html>
