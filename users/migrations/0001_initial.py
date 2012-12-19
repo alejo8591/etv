@@ -11,7 +11,8 @@ class Migration(SchemaMigration):
         # Adding model 'UserProfile'
         db.create_table('users_userprofile', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('userIDNumber', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['auth.User'], unique=True)),
+            ('identification', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['auth.User'], unique=True)),
+            ('refFranchisee', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['users.UserProfile'])),
             ('firstName', self.gf('django.db.models.fields.CharField')(max_length=60)),
             ('lastName', self.gf('django.db.models.fields.CharField')(max_length=60)),
             ('disabled', self.gf('django.db.models.fields.BooleanField')(default=False)),
@@ -22,13 +23,28 @@ class Migration(SchemaMigration):
             ('alternativePhone', self.gf('django.db.models.fields.CharField')(max_length=60)),
             ('address', self.gf('django.db.models.fields.CharField')(max_length=60)),
             ('lastAccess', self.gf('django.db.models.fields.DateTimeField')(default=datetime.datetime.now)),
+            ('activationKey', self.gf('django.db.models.fields.CharField')(max_length=60)),
+            ('keyExpires', self.gf('django.db.models.fields.DateTimeField')()),
         ))
         db.send_create_signal('users', ['UserProfile'])
+
+        # Adding model 'CreateCodes'
+        db.create_table('users_createcodes', (
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('franchisee', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['users.UserProfile'])),
+            ('code', self.gf('django.db.models.fields.CharField')(max_length=20)),
+            ('UseFlagCode', self.gf('django.db.models.fields.BooleanField')(default=False)),
+            ('dateUseFlag', self.gf('django.db.models.fields.DateTimeField')()),
+        ))
+        db.send_create_signal('users', ['CreateCodes'])
 
 
     def backwards(self, orm):
         # Deleting model 'UserProfile'
         db.delete_table('users_userprofile')
+
+        # Deleting model 'CreateCodes'
+        db.delete_table('users_createcodes')
 
 
     models = {
@@ -68,8 +84,17 @@ class Migration(SchemaMigration):
             'model': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
+        'users.createcodes': {
+            'Meta': {'object_name': 'CreateCodes'},
+            'UseFlagCode': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'code': ('django.db.models.fields.CharField', [], {'max_length': '20'}),
+            'dateUseFlag': ('django.db.models.fields.DateTimeField', [], {}),
+            'franchisee': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['users.UserProfile']"}),
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'})
+        },
         'users.userprofile': {
             'Meta': {'ordering': "['firstName']", 'object_name': 'UserProfile'},
+            'activationKey': ('django.db.models.fields.CharField', [], {'max_length': '60'}),
             'address': ('django.db.models.fields.CharField', [], {'max_length': '60'}),
             'alternativePhone': ('django.db.models.fields.CharField', [], {'max_length': '60'}),
             'city': ('django.db.models.fields.CharField', [], {'max_length': '60'}),
@@ -77,11 +102,13 @@ class Migration(SchemaMigration):
             'disabled': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'firstName': ('django.db.models.fields.CharField', [], {'max_length': '60'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'identification': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['auth.User']", 'unique': 'True'}),
+            'keyExpires': ('django.db.models.fields.DateTimeField', [], {}),
             'lastAccess': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
             'lastName': ('django.db.models.fields.CharField', [], {'max_length': '60'}),
             'mobile': ('django.db.models.fields.CharField', [], {'max_length': '60'}),
             'phone': ('django.db.models.fields.CharField', [], {'max_length': '60'}),
-            'userIDNumber': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['auth.User']", 'unique': 'True'})
+            'refFranchisee': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['users.UserProfile']"})
         }
     }
 
