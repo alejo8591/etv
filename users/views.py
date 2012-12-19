@@ -6,16 +6,18 @@ from django.core.mail import send_mail
 
 from users.models import UserProfile
 from users.forms import RegistrationForm
+from dajaxice.core import dajaxice_functions
 
 def register(request):
-    form = RegistrationForm()
-    context = Context({'title':'register','legend':'Register New Users','form':form})
+    # enabled when not in production or not in the system
     """
     if request.user.is_authenticated():
         # They already have an account; don't let them register again
         return render_to_response('users/register.html', {'has_account':True})
-    manipulator = RegistrationForm()
-    
+    """
+    form = RegistrationForm()
+    context = Context({'title':'register','legend':'Register New Users','form':form})
+    """
     if request.POST:
         new_data = request.POST.copy()
         errors = manipulator.get_validation_errors(new_data)
@@ -51,11 +53,42 @@ def register(request):
      """
      
     if request.method == 'POST':
+        # A form bound to the POST data
         form =  RegistrationForm(request.POST)
         if form.is_valid():
+            # Clean Fields
+            identification =form.cleaned_data['identification']
+            email          =form.cleaned_data['email']
+            passwordOne    =form.cleaned_data['passwordOne']
+            passwordTwo    = form.cleaned_data['passwordTwo']
+            franchiseeCode = form.cleaned_data['franchiseeCode']
+            # JSON Fields 
+            data = {
+                'identification': identification,
+                'email': email,
+                'passwordOne':passwordOne,
+                'passwordTwo':passwordTwo,
+                'franchiseeCode':franchiseeCode 
+            }
+            
+            # verifying that the user does not exist
+            validFranchesee = form.isValidFranchesee(data['identification'])
+            if validFranchesee:
+                
+                # Build the activation key for their account
+                salt = sha.new(str(random.random())).hexdigest()[:5]
+                activation_hey = sha.new(salt+new_user.username).hexdigest()
+                key_expires = datetime.datetime.today() + datetime.timedelta(2)
+            
+            # If the user already exists then announces that already exists    
+            else:
+                
+                return 
+            
             return HttpResponseRedirect('/thanks/')
         else:
             context = Context({'title':'register','legend':'Register New Users','form':form})
+    # Return context with clean Form register
     return render_to_response('users/register.html', context)
     
     
