@@ -7,8 +7,8 @@ class RegistrationForm(forms.Form):
     # Fields for the creation of the user who is not registered
     identification = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Usuario en el Sistema', 'class':'span3'}))
     email          = forms.EmailField(widget=forms.TextInput(attrs={'placeholder':'email', 'class':'span3'}))
-    passwordOne    = forms.CharField(widget=forms.PasswordInput(render_value=False, attrs={'placeholder':'contraseña base', 'class':'span3'}))
-    passwordTwo    = forms.CharField(widget=forms.PasswordInput(render_value=False, attrs={'placeholder':'Repetir contraseña base', 'class':'span3'}))
+    passwordOne    = forms.CharField(widget=forms.PasswordInput(render_value=False, attrs={'placeholder':'Escriba la Contraseña', 'class':'span3'}))
+    passwordTwo    = forms.CharField(widget=forms.PasswordInput(render_value=False, attrs={'placeholder':'Repita la Contraseña', 'class':'span3'}))
     franchiseeCode = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Código Franquiciado', 'class':'span3'}))
     
     #Method for verifying that the user is not in the database

@@ -2,7 +2,7 @@
 import dj_database_url
 import os
 ROOT_CONF = os.path.dirname(os.path.realpath(__file__))
-__version__ = '0.0.2'
+__version__ = '0.0.3'
 __status__ = 'alpha'
 
 DEBUG = True
