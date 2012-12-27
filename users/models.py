@@ -1,27 +1,32 @@
 # -*- coding: utf-8 -*-
-from django.db import models
+from django.db import models, connection
+from django.db.models.sql import InsertQuery
 import django.contrib.auth.models as djangoauth
 from django.utils.translation import ugettext as _
 from datetime import date, datetime
 from django.db.models.signals import post_save
 from users.classes.UsersCodes import UserCode
+from users.classes.BulkInsert import Bulk
+from django.conf import settings
 
 from datetime import datetime
 
 class UserProfile(models.Model):
+    """
+        It extends the model model user base that comes with django and gives
+        the performance needed for working with user data
+    """
     CITY = (
-        ('Bogotá','Bogotá'),
+        (u'Bogotá',u'Bogotá'),
         ('Cali','Cali'),
         ('Barranquilla','Barranquilla'),
         ('Medellin','Medellin'),        
     )
     identification = models.OneToOneField(djangoauth.User)
     refFranchisee  = models.ForeignKey('self', help_text="Usuario Franqiciado que lo referencia", verbose_name="Franquiciado Referenciado", blank=True, null=True)
-    firstName      = models.CharField(max_length=60, help_text="Ingrese su(s) Nombre(s)", verbose_name="Nombre(s)")
-    lastName       = models.CharField(max_length=60, help_text="Ingrese su(s) Apellido(s)", verbose_name="Apellido(s)")
-    disabled       = models.BooleanField(default=False)
     city           = models.CharField(max_length=60, choices= CITY, help_text="Ciudad donde vive", verbose_name="Ciudad")
-    dateOfBirth    = models.DateField(help_text="Ciudad donde vive", verbose_name="Fecha de Nacimiento")
+    dateOfBirth    = models.DateField(help_text="Fecha de Nacimiento", verbose_name="Indique la Fecha de Nacimiento")
+    photo          = models.ImageField(help_text="Foto del Usuario", verbose_name="Foto", blank=True, null=True, upload_to="uploads")
     phone          = models.CharField(max_length=60, help_text="Número de Telefono de contacto", verbose_name="Telefono", blank=True, null=True)
     mobile         = models.CharField(max_length=60, help_text="Número de Telefono móvil de contacto", verbose_name="Telefono móvil")
     alternativePhone = models.CharField(max_length=60, help_text="Número de Telefono o FAX", verbose_name="Telefono/FAX", blank=True, null=True)
@@ -32,10 +37,10 @@ class UserProfile(models.Model):
     keyExpires     = models.DateTimeField(editable=False, blank=True, null=True)
     
     class Meta:
-        ordering = ['firstName']
+        ordering = ['identification']
     
     def __unicode__(self):
-            return "%s %s %s" %(self.firstName, self.lastName, self.identification)
+            return "%s" %(self.identification)
     # Saving franchisee regarding whether or not referenced
     def save(self, *args, **kwargs):
         r = UserProfile.objects.all()
@@ -51,22 +56,25 @@ def createUser(sender, instance, created, **kwargs):
 post_save.connect(createUser, sender=djangoauth.User)
 
 class CreateCodes(models.Model):
-    franchisee  = models.ForeignKey('UserProfile')
-    code        = models.CharField(max_length=20, editable=False)
-    UseFlagCode = models.BooleanField(default=False, editable=False)
+    """
+        This model is based on the class 'BulkInsert' to create the 20 codes that are
+        assigned to the franchisee or franchisee referenced and anchor with
+        your franchisee level
+    
+    """
+    franchisee  = models.ForeignKey('UserProfile', to_field='identification')
+    code        = models.CharField(max_length=20, editable=False, unique=True)
+    useFlagCode = models.BooleanField(default=False, editable=False)
     dateUseFlag = models.DateTimeField(editable=False, blank=True, null=True)
     dateCreateCode = models.DateTimeField(auto_now_add=True, editable=False)
     
-    def createCodes(self):
+    def __unicode__(self):
+        return "%s %s"%(self.franchisee, self.code)  
+     
+    def save(self):
+        bulk = Bulk()
+        values = []
         self.cod = UserCode()
         self.codes = self.cod.generateCodes(str(self.franchisee))
-        for i in range(len(self.codes)):
-            self.franchisee = self.franchisee
-            self.code = self.codes[i]
-            self.UseFlagCode = False
-            self.dateUseFlag = None
-            self.dateCreateCode = datetime.now()
-            super(CreateCodes, self).save(*args, **kwargs)
-    
-    def save(self, *args, **kwargs):
-        super(CreateCodes, self).save(*args, **kwargs)
+        for i in range(len(self.codes)):values.append(CreateCodes(franchisee = self.franchisee, code = self.codes[i], useFlagCode = False, dateUseFlag = None, dateCreateCode = datetime.now()))
+        bulk.insert_many(CreateCodes,values)
