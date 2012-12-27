@@ -72,9 +72,7 @@ class CreateCodes(models.Model):
         return "%s %s"%(self.franchisee, self.code)  
      
     def save(self):
-        bulk = Bulk()
-        values = []
-        self.cod = UserCode()
+        bulk = Bulk(); values = []; self.cod = UserCode()
         self.codes = self.cod.generateCodes(str(self.franchisee))
         for i in range(len(self.codes)):values.append(CreateCodes(franchisee = self.franchisee, code = self.codes[i], useFlagCode = False, dateUseFlag = None, dateCreateCode = datetime.now()))
-        bulk.insert_many(CreateCodes,values)
+        bulk.insertMany(CreateCodes,values)
