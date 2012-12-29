@@ -1,0 +1,64 @@
+{% extends "users/base.html" %}
+{% load dajaxice_templatetags %}
+	{% block content %}
+                <div class="span6">
+                <form method='post' id="my_form" action='/thanks/'>{% csrf_token %}
+                <fieldset>
+                    <legend class="lead">{{ legend }}</legend>
+                    {{ form.non_field_errors }}
+		    <div id='errors' class="alert alert-info">
+			<b>Saludos!</b> Por favor diligenciar los campos marcados con <b>*</b> son necesarios
+		    </div>
+			<div class="controls">
+			    <div id="f_identification">
+			    {{ form.identification.errors }}
+			    <label class="control-label" for="id_identification">Cedula o Identificación</label>
+				{{form.identification}}
+			    </div>
+			</div>
+			<div class="controls">
+			    <div id="f_email">
+			    {{ form.email.errors }}
+			    <label class="control-label" for="id_email">Correo electronico</label>
+				{{form.email}}
+			    </div>
+			</div>
+			<div class="controls">
+			    <div id="f_passwordOne">
+			    {{ form.passwordOne.errors }}
+			    <label class="control-label" for="id_passwordOne">Contraseña</label>
+				{{form.passwordOne}}
+			    </div>
+			</div>
+			<div class="controls">
+			    <div id="f_passwordTwo">
+			    {{ form.passwordTwo.errors }}
+			    <label class="control-label" for="id_passwordTwo">Verificación Contraseña</label>
+				{{form.passwordTwo}}
+			    </div>
+			</div>
+			<div class="controls">
+			    <div id="f_franchiseeCode">
+			    {{ form.franchiseeCode.errors }}
+			    <label class="control-label" for="id_franchiseeCode">Código de Referencia</label>
+				{{form.franchiseeCode}}
+			    </div>
+			</div>
+			<input data-toggle="modal" class="btn btn-primary" role="button" id="buttonSend" value="Registarme!" />
+                </fieldset>
+                </form>
+            </div>
+	    
+	    <!-- Modal Register-->
+	    <div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	      <div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+		<h3 id="myModalLabel">Lee la siguiente información</h3>
+	      </div>
+	      <div class="modal-body" id="modalBody">
+	      </div>
+	      <div class="modal-footer">
+		<button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Cerrar</button>
+	      </div>
+	    </div>
+	{% endblock %}
