@@ -2,28 +2,44 @@
 from django import forms
 from django.core import validators
 from django.contrib.auth.models import User
+from users.models import CreateCodes, UserProfile
 
-class RegistrationForm(forms.Form):
+class RegistrationFormFranchisee(forms.Form):
     # Fields for the creation of the user who is not registered
     identification = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Usuario en el Sistema', 'class':'span3'}))
     email          = forms.EmailField(widget=forms.TextInput(attrs={'placeholder':'email', 'class':'span3'}))
     passwordOne    = forms.CharField(widget=forms.PasswordInput(render_value=False, attrs={'placeholder':'Escriba la Contraseña', 'class':'span3'}))
     passwordTwo    = forms.CharField(widget=forms.PasswordInput(render_value=False, attrs={'placeholder':'Repita la Contraseña', 'class':'span3'}))
-    franchiseeCode = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Código Franquiciado', 'class':'span3'}))
+    franchiseeCode = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Código Franquiciado', 'class':'span3'}), required=False, initial=None)
     
-    #Method for verifying that the user is not in the database
-    def isValidFranchesee(franchisee):
+    # Method for verifying that the user and data is not in the database
+    def isValidFranchisee(self, franchisee):
         try:
             User.objects.get(username=franchisee)
         except User.DoesNotExist:
             return True
         return False
-        
+    
+    def isValidFranchiseeEmail(self, email):
+        try:
+            User.objects.get(email=email)
+        except User.DoesNotExist:
+            return True
+        return False
+    
+    def isValidFranchiseeCode(self, franchiseeCode):
+        try:
+            franchiseeReg = CreateCodes.objects.get(code=franchiseeCode) 
+        except CreateCodes.DoesNotExist:
+            return {'message':'Este código No existe', 'flag':None, 'id':None}
+        # if users code do not exist
+        return {'message': 'La cedula del franquiciado que te referencia es %s' % (str(franchiseeReg.franchisee.identification.username)), 'flag': True, 'id': franchiseeReg.franchisee.identification.id}
+    
     # Method for creating the user in the database
-    def save(self, new_data):
-        u = User.objects.create_user(new_data['identification'],
-                                    new_data['email'],
-                                    new_data['password1'])
+    def save(self, data):
+        u = User.objects.create_user(data['identification'],
+                                    data['email'],
+                                    data['passwordOne'])
         u.is_active = False
         u.save()
         return u
