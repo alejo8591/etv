@@ -10,26 +10,26 @@ class Migration(SchemaMigration):
     def forwards(self, orm):
         # Adding model 'UserProfile'
         db.create_table('users_userprofile', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('identification', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['auth.User'], unique=True)),
+            ('identification', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['auth.User'], unique=True, primary_key=True)),
             ('refFranchisee', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['users.UserProfile'], null=True, blank=True)),
-            ('city', self.gf('django.db.models.fields.CharField')(max_length=60)),
-            ('dateOfBirth', self.gf('django.db.models.fields.DateField')()),
+            ('city', self.gf('django.db.models.fields.CharField')(max_length=60, null=True, blank=True)),
+            ('dateOfBirth', self.gf('django.db.models.fields.DateField')(null=True, blank=True)),
             ('photo', self.gf('django.db.models.fields.files.ImageField')(max_length=100, null=True, blank=True)),
             ('phone', self.gf('django.db.models.fields.CharField')(max_length=60, null=True, blank=True)),
-            ('mobile', self.gf('django.db.models.fields.CharField')(max_length=60)),
+            ('mobile', self.gf('django.db.models.fields.CharField')(max_length=60, null=True, blank=True)),
             ('alternativePhone', self.gf('django.db.models.fields.CharField')(max_length=60, null=True, blank=True)),
-            ('address', self.gf('django.db.models.fields.CharField')(max_length=60)),
+            ('address', self.gf('django.db.models.fields.CharField')(max_length=60, null=True, blank=True)),
             ('lastAccess', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, blank=True)),
             ('activationKey', self.gf('django.db.models.fields.CharField')(max_length=60, null=True, blank=True)),
             ('keyExpires', self.gf('django.db.models.fields.DateTimeField')(null=True, blank=True)),
+            ('refFranchiseeCode', self.gf('django.db.models.fields.CharField')(max_length=20, unique=True, null=True, blank=True)),
         ))
         db.send_create_signal('users', ['UserProfile'])
 
         # Adding model 'CreateCodes'
         db.create_table('users_createcodes', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('franchisee', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['users.UserProfile'], to_field='identification')),
+            ('franchisee', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['users.UserProfile'])),
             ('code', self.gf('django.db.models.fields.CharField')(unique=True, max_length=20)),
             ('useFlagCode', self.gf('django.db.models.fields.BooleanField')(default=False)),
             ('dateUseFlag', self.gf('django.db.models.fields.DateTimeField')(null=True, blank=True)),
@@ -88,25 +88,25 @@ class Migration(SchemaMigration):
             'code': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '20'}),
             'dateCreateCode': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'dateUseFlag': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
-            'franchisee': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['users.UserProfile']", 'to_field': "'identification'"}),
+            'franchisee': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['users.UserProfile']"}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'useFlagCode': ('django.db.models.fields.BooleanField', [], {'default': 'False'})
         },
         'users.userprofile': {
             'Meta': {'ordering': "['identification']", 'object_name': 'UserProfile'},
             'activationKey': ('django.db.models.fields.CharField', [], {'max_length': '60', 'null': 'True', 'blank': 'True'}),
-            'address': ('django.db.models.fields.CharField', [], {'max_length': '60'}),
+            'address': ('django.db.models.fields.CharField', [], {'max_length': '60', 'null': 'True', 'blank': 'True'}),
             'alternativePhone': ('django.db.models.fields.CharField', [], {'max_length': '60', 'null': 'True', 'blank': 'True'}),
-            'city': ('django.db.models.fields.CharField', [], {'max_length': '60'}),
-            'dateOfBirth': ('django.db.models.fields.DateField', [], {}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'identification': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['auth.User']", 'unique': 'True'}),
+            'city': ('django.db.models.fields.CharField', [], {'max_length': '60', 'null': 'True', 'blank': 'True'}),
+            'dateOfBirth': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
+            'identification': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['auth.User']", 'unique': 'True', 'primary_key': 'True'}),
             'keyExpires': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
             'lastAccess': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
-            'mobile': ('django.db.models.fields.CharField', [], {'max_length': '60'}),
+            'mobile': ('django.db.models.fields.CharField', [], {'max_length': '60', 'null': 'True', 'blank': 'True'}),
             'phone': ('django.db.models.fields.CharField', [], {'max_length': '60', 'null': 'True', 'blank': 'True'}),
             'photo': ('django.db.models.fields.files.ImageField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
-            'refFranchisee': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['users.UserProfile']", 'null': 'True', 'blank': 'True'})
+            'refFranchisee': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['users.UserProfile']", 'null': 'True', 'blank': 'True'}),
+            'refFranchiseeCode': ('django.db.models.fields.CharField', [], {'max_length': '20', 'unique': 'True', 'null': 'True', 'blank': 'True'})
         }
     }
 
