@@ -9,9 +9,9 @@ admin.autodiscover()
 dajaxice_autodiscover()
 
 urlpatterns = patterns('',
-       url(r'^admin/', include(admin.site.urls)),
+       url(r'^elevate/', include(admin.site.urls)),
        (r'^grappelli/', include('grappelli.urls')),
-       url(r'^register/', 'users.views.register'),
+       url(r'^register/', 'users.views.registerFranchisee'),
        url(dajaxice_config.dajaxice_url, include('dajaxice.urls')),
        
 )
