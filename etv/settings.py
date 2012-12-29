@@ -10,6 +10,7 @@ TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
+    ('Alejandro Romero', 'alejo8591@gmail.com'),
 )
 
 MANAGERS = ADMINS
@@ -153,3 +154,9 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.request',
     'django.contrib.messages.context_processors.messages'
 )
+#config for send email for register users
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'alejo8591@gmail.com'
+EMAIL_HOST_PASSWORD = '2BeM5EIc'
