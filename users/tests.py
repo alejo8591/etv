@@ -1,16 +1,20 @@
-"""
-This file demonstrates writing tests using the unittest module. These will pass
-when you run "manage.py test".
-
-Replace this with more appropriate tests for your application.
-"""
-
-from django.test import TestCase
+# -*- coding: utf-8 -*-
+from django.test import LiveServerTestCase, TestCase
+from selenium import webdriver
 
 
-class SimpleTest(TestCase):
-    def test_basic_addition(self):
-        """
-        Tests that 1 + 1 always equals 2.
-        """
-        self.assertEqual(1 + 1, 2)
+class AdminTest(TestCase):
+     
+    def setUp(self):
+        self.browser = webdriver.Firefox()
+        self.browser.implicitly_wait(3)
+        
+    def test_can_admin(self):
+        self.browser.get('http://127.0.0.1:8000' + '/register/')
+        
+        self.assertIn("registe", self.browser.title)
+        
+        #self.fail('finish this error for admin site')
+        
+    def tearDown(self):
+        self.browser.quit()
