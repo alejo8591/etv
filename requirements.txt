@@ -10,5 +10,8 @@ django-dajaxice==0.5.4
 django-grappelli==2.4.3
 django-sphinx==2.2.4
 docutils==0.10
+mock==1.0.1
 psycopg2==2.4.5
+selenium==2.28.0
+unittest2==0.5.1
 wsgiref==0.1.2
