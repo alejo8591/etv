@@ -5,7 +5,6 @@ from users.models import UserProfile
 from django.contrib.auth.models import User
 from django.core.mail import EmailMessage
 
-
 class UserRegistration(object):
         
     def __init__(self, form):
@@ -617,8 +616,8 @@ class UserRegistration(object):
                         <p></html>
                         </p>
                     """
-             
-        else:
+            
+        elif self._validFranchiseeCode['flag'] == False:
             body = "Hello, %s, and thanks for signing up for an \n elevatusventas.com account!\n\nTo activate your account, click this link within 48 \hours:\n\nhttp://example.com/accounts/confirm/%s" % (
                         self._identification,
                         self._activationKey)
