@@ -31,6 +31,10 @@ class RegistrationFormFranchisee(forms.Form):
         try:
             franchiseeReg = CreateCodes.objects.get(code=franchiseeCode) 
         except CreateCodes.DoesNotExist:
+            # checking if the field is blank franchiseeCode or invalid 
+            if franchiseeCode == '':
+                return {'message':'No suministra código de referencia para Franquiciado', 'flag':False, 'id':0}
+            #invalid FranchiseeCode
             return {'message':'Este código No existe', 'flag':None, 'id':None}
         # if users code do not exist
         return {'message': 'La cedula del franquiciado que te referencia es %s' % (str(franchiseeReg.franchisee.identification.username)), 'flag': True, 'id': franchiseeReg.franchisee.identification.id}
