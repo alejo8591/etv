@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.db import models, connection
 from django.db.models.sql import InsertQuery
-import django.contrib.auth.models as djangoauth
+from django.contrib.auth.models import User
 from django.utils.translation import ugettext as _
 from datetime import date, datetime
 from django.db.models.signals import post_save
@@ -22,7 +22,7 @@ class UserProfile(models.Model):
         (u'Barranquilla',u'Barranquilla'),
         (u'Medellin',u'Medellin'),        
     )
-    identification = models.OneToOneField(djangoauth.User, primary_key=True)
+    identification = models.OneToOneField(User, primary_key=True)
     refFranchisee  = models.ForeignKey('self', help_text="Usuario Franqiciado que lo referencia", verbose_name="Franquiciado Referenciado", blank=True, null=True)
     city           = models.CharField(max_length=60, choices= CITY, help_text="Ciudad donde vive", verbose_name="Ciudad", blank=True, null=True)
     dateOfBirth    = models.DateField(help_text="Fecha de Nacimiento", verbose_name="Indique la Fecha de Nacimiento", blank=True, null=True)
@@ -49,7 +49,7 @@ def createUser(sender, instance, created, **kwargs):
            profile.identification = instance
            profile.save
             
-post_save.connect(createUser, sender=djangoauth.User)
+post_save.connect(createUser, sender=User)
 
 class CreateCodes(models.Model):
     """
