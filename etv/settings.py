@@ -106,11 +106,13 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'devserver',
     'grappelli',
     'django.contrib.admin',
     'dajax',
     'dajaxice',
     'south',
+    'tastypie',
     'users',
 )
 
