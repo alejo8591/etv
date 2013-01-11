@@ -2,21 +2,26 @@
 from django.test import LiveServerTestCase, TestCase
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-#from selenium.webdriver import
+from dajaxice.decorators import dajaxice_register
 
-class AdminTest(TestCase):
+class RegisterFranchiseeTest(TestCase):
      
     def setUp(self):
         self.browser = webdriver.Firefox()
-        self.browser.implicitly_wait(3)
+        self.browser.implicitly_wait(5)
         
+    def tearDown(self):
+        self.browser.close()
+        self.browser.quit()
+    
+    @dajaxice_register(method='POST')
     def test_can_admin(self):
         self.browser.get('http://127.0.0.1:8000' + '/register/')
            
         self.assertIn("register", self.browser.title)
         
         user = self.browser.find_element_by_id("id_identification")
-        user.send_keys("80912070")
+        user.send_keys("80912071")
         user.send_keys(Keys.RETURN)
         
         email = self.browser.find_element_by_id("id_email")
@@ -32,14 +37,7 @@ class AdminTest(TestCase):
         passwordTwo.send_keys(Keys.RETURN)
         
         franchiseeCode = self.browser.find_element_by_id("id_franchiseeCode")
-        franchiseeCode.send_keys("80912070")
+        franchiseeCode.send_keys("XXXXXXX")
         franchiseeCode.send_keys(Keys.RETURN)
         
-        buttonSend = self.browser.find_elements_by_id("buttonSend")
-        
-        #buttonSend.submit()
-        
-        
-    def tearDown(self):
-        self.browser.close()
-        self.browser.quit()
+        self.browser.find_element_by_id("buttonSend").click()
