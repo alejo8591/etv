@@ -33,10 +33,9 @@ def send_form(request,form):
             # validation data: Franchisee code, email, Franchisee
             validFranchisee = formf.validDataFranchisee()
             #checking fields not in use
-            if (validFranchisee['franchisee'] == True and validFranchisee['email'] == True and validFranchisee['franchiseeCode']['flag'] == True):
+            if (validFranchisee['franchisee'] == True and validFranchisee['email'] == True and validFranchisee['franchiseeCode']['flag'] == True and validFranchisee['franchiseeCode']['id'] > 0 or validFranchisee['franchiseeCode']['flag'] == False and validFranchisee['franchiseeCode']['id'] == 0):
                 
                 formf.saveUser(); formf.activationKey(); formf.newUserProfile()
-                formf.send_mails('alejo8591@gmail.com')
                    
                  # change in the respective fields successful color
                 for field in form.fields:
@@ -47,16 +46,18 @@ def send_form(request,form):
                     dajax.remove('#label_%s' % field)
                     dajax.append('#f_%s'% field, 'innerHTML','<span id="label_%s" class="label label-success">Correcto</span>'% field)
                 
+                # Change other fields with successful Color
                 dajax.remove_css_class('#errors','alert alert-info')
                 dajax.remove_css_class('#errors','alert alert-error')
                 dajax.add_css_class('#errors','alert alert-success')
                 dajax.assign('#errors', 'innerHTML', '<b>Muchas Gracias se Registro con exito!</b>')
                 dajax.assign('#modalBody', 'innerHTML', '<h5>Para tener en cuenta:</h5><span class="badge badge-inverse">1</span> Revisa tu correo electronico <span class="label label-info">%s</span>' % data['email'])
-                # Announcement correct entry
-                #dajax.script('$("#modal-body").append(function(){<h5>Para tener en cuenta:</h5><span class="badge badge-inverse">1</span> Revisa tu correo electronico <span class="label label-info">%s</span>});' % data['email'])
-                #<span class="badge badge-inverse">2</span> Verifica el correo enviado por <span class="label label-info">alejo8591@gmail.com</span><span class="badge badge-inverse">3</span> por ultimo click en el enlace de <span class="label label-important">Finalizar Registro</span>
+                # Modal with info subcriptor
                 dajax.script("$('#myModal').modal('show')")
                 
+                # Send message
+                formf.send_mails('alejo8591@gmail.com')
+                        
             # If the user or user code already exists or use   
             else:
                 dajax.assign('#modalBody', 'innerHTML', '<h5>Algo salio mal:</h5><span class="badge badge-inverse">1</span> Revisa tu correo electronico <span class="label label-info">%s</span>' % data['email'])
