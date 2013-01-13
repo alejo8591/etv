@@ -2,7 +2,7 @@
 import dj_database_url
 import os
 ROOT_CONF = os.path.dirname(os.path.realpath(__file__))
-__version__ = '0.0.4'
+__version__ = '0.4.0'
 __status__ = 'alpha'
 
 DEBUG = True
@@ -25,7 +25,6 @@ DATABASES = {
         'PORT': '5432',                      # Set to empty string for default. Not used with sqlite3.
     }
 }
-
 
 TIME_ZONE = 'America/Bogota'
 
