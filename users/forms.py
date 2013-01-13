@@ -33,11 +33,14 @@ class RegistrationFormFranchisee(forms.Form):
         except CreateCodes.DoesNotExist:
             # checking if the field is blank franchiseeCode or invalid 
             if franchiseeCode == '':
-                return {'message':'No suministra código de referencia para Franquiciado', 'flag':False, 'id':0}
+                return {'message':u'No suministra código de referencia para Franquiciado', 'flag':False, 'id':0}
             #invalid FranchiseeCode
-            return {'message':'Este código No existe', 'flag':None, 'id':None}
-        # if users code do not exist
-        return {'message': 'La cedula del franquiciado que te referencia es %s' % (str(franchiseeReg.franchisee.identification.username)), 'flag': True, 'id': franchiseeReg.franchisee.identification.id}
+            return {'message':u'Este código No existe', 'flag':None, 'id':None}
+        # if users code is used or not
+        if franchiseeReg.useFlagCode == True:
+            return {'message':u'Este código ya esta en Uso', 'flag':False, 'id':-1}
+        else:
+            return {'message': u'La cedula del franquiciado que te referencia es %s' % (str(franchiseeReg.franchisee.identification.username)), 'flag': True, 'id': franchiseeReg.franchisee.identification.id}
     
     # Method for creating the user in the database
     def save(self, data):
