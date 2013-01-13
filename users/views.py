@@ -17,7 +17,7 @@ def registerFranchisee(request):
     """
     form = RegistrationFormFranchisee()
     
-    context = Context({'title':'register','legend':'Registrate como Franquiciado!','form':form})
+    context = Context({'title':'register','legend':u'Registrate como Franquiciado!','form':form})
     # Return context with clean Form register
     return render_to_response('users/register_franchisee.html', context)
     
