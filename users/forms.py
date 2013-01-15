@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
 from django import forms
-from django.core import validators
+from django.forms import widgets
 from django.contrib.auth.models import User
 from users.models import CreateCodes, UserProfile
 
 class RegistrationFormFranchisee(forms.Form):
     # Fields for the creation of the user who is not registered
-    identification = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Usuario en el Sistema', 'class':'span3'}))
-    email          = forms.EmailField(widget=forms.TextInput(attrs={'placeholder':'email', 'class':'span3'}))
-    passwordOne    = forms.CharField(widget=forms.PasswordInput(render_value=False, attrs={'placeholder':'Escriba la Contraseña', 'class':'span3'}))
-    passwordTwo    = forms.CharField(widget=forms.PasswordInput(render_value=False, attrs={'placeholder':'Repita la Contraseña', 'class':'span3'}))
-    franchiseeCode = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Código Franquiciado', 'class':'span3'}), required=False, initial=None)
+    identification = forms.CharField(min_length=8, max_length=12, widget=forms.TextInput(attrs={'placeholder':'Usuario en el Sistema', 'class':'span3, {required:true, minlength:2, maxlength:100}'}))
+    email          = forms.EmailField(min_length=6, max_length=40, widget=forms.TextInput(attrs={'placeholder':'email', 'class':'span3'}))
+    passwordOne    = forms.CharField(min_length=6, max_length=20, widget=forms.PasswordInput(render_value=False, attrs={'placeholder':'Escriba la Contraseña', 'class':'span3'}))
+    passwordTwo    = forms.CharField(min_length=6, max_length=20, widget=forms.PasswordInput(render_value=False, attrs={'placeholder':'Repita la Contraseña', 'class':'span3'}))
+    franchiseeCode = forms.CharField(max_length=8, widget=forms.TextInput(attrs={'placeholder':'Código Franquiciado', 'class':'span3'}), required=False, initial=None)
     
     # Method for verifying that the user and data is not in the database
     def isValidFranchisee(self, franchisee):
@@ -33,7 +33,7 @@ class RegistrationFormFranchisee(forms.Form):
         except CreateCodes.DoesNotExist:
             # checking if the field is blank franchiseeCode or invalid 
             if franchiseeCode == '':
-                return {'message':u'No suministra código de referencia para Franquiciado', 'flag':False, 'id':0}
+                return {'message':u'No suministra código de referencia para Franquiciado', 'flag':True, 'id':0}
             #invalid FranchiseeCode
             return {'message':u'Este código No existe', 'flag':None, 'id':None}
         # if users code is used or not
@@ -44,9 +44,9 @@ class RegistrationFormFranchisee(forms.Form):
     
     # Method for creating the user in the database
     def save(self, data):
-        u = User.objects.create_user(data['identification'],
+        newUser = User.objects.create_user(data['identification'],
                                     data['email'],
                                     data['passwordOne'])
-        u.is_active = False
-        u.save()
-        return u
+        newUser.is_active = False
+        newUser.save()
+        return newUser
