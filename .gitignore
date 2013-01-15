@@ -38,3 +38,6 @@ nosetests.xml
 venv/
 /venv/
 /venv
+
+# DS Store
+.DS_Store
