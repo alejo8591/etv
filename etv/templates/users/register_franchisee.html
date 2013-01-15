@@ -1,8 +1,19 @@
 {% extends "users/base.html" %}
 {% load dajaxice_templatetags %}
 	{% block content %}
+	    {% if has_account %}
+		<div class="alert alert-block">
+		    <p>
+		    <h3>¡Cuidado!</h3>
+		    <h4>¡Ya estas registrado y eres un Franquiciado activo en el sistema!</h4>
+		    </p><br />
+		    <p>
+			<button class="btn btn-primary" type="button">Regregar al Menú General</button>
+		    </p>
+		</div>
+	    {% else %}
                 <div class="span6">
-                <form method='post' id="my_form" action='/thanks/'>{% csrf_token %}
+                <form method='post' id="my_form" accept-charset="utf-8">{% csrf_token %}
                 <fieldset>
                     <legend class="lead">{{ legend }}</legend>
                     {{ form.non_field_errors }}
@@ -61,4 +72,5 @@
 		<button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Cerrar</button>
 	      </div>
 	    </div>
+	    {% endif %}
 	{% endblock %}
