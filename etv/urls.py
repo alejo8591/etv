@@ -4,8 +4,9 @@ from django.contrib import admin
 from etv import settings
 from dajaxice import urls
 from dajaxice.core import dajaxice_autodiscover, dajaxice_config
-from users.api.api import UserProfileResource, UserResource
 from tastypie.api import Api
+from users.api.api import UserProfileResource, UserResource
+
 
 #Api RESTful
 user_api_v1 = Api(api_name='user')
@@ -18,8 +19,9 @@ dajaxice_autodiscover()
 urlpatterns = patterns('',
        url(r'^elevate/', include(admin.site.urls)),
        (r'^grappelli/', include('grappelli.urls')),
-       url(r'^register/', 'users.views.registerFranchisee'),
        url(dajaxice_config.dajaxice_url, include('dajaxice.urls')),
+       url(r'^register/$', 'users.views.registerFranchisee'),
+       url(r'^register/confirm/(?P<activation_key>\w+)', 'users.views.confirmFranchisee'),
        (r'^api/', include(user_api_v1.urls)),
        
 )
