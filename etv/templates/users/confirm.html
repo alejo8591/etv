@@ -1,0 +1,21 @@
+{% extends "users/base.html" %}
+{% load dajaxice_templatetags %}
+	{% block content %}
+            {% if has_account %}
+                <div class="alert alert-block">
+		    <p>
+		    <h3>¡Cuidado!</h3>
+		    <h4><strong>¡Ya estas registrado y eres un Franquiciado activo en el sistema!</strong></h4>
+		    </p><br />
+		    <p>
+			<button class="btn btn-primary" type="button">Regregar al Menú General</button>
+		    </p>
+		</div>
+            {% else %}
+            <div class="alert alert-success">
+                <h3>¡Felicitaciones!</h3>
+                <h4><strong>Ya eres un Franquiciado en elevatusventas.com</strong></h4><br />
+                <button class="btn btn-large btn-primary" type="button">Ingresa al Sistema!</button>
+            </div>
+            {% endif %}
+        {% endblock %}
