@@ -43,7 +43,7 @@ USE_I18N = True
 USE_L10N = True
 
 # If you set this to False, Django will not use timezone-aware datetimes.
-USE_TZ = True
+USE_TZ = False
 
 #statics files
 MEDIA_ROOT = ROOT_CONF + '/uploads/'
@@ -153,7 +153,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.media',
     'django.core.context_processors.static',
     'django.core.context_processors.request',
-    'django.contrib.messages.context_processors.messages'
+    'django.contrib.messages.context_processors.messages',
+    'django.core.context_processors.csrf',
 )
 #config for send email for register users
 EMAIL_USE_TLS = True
