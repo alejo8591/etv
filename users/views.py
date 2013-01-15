@@ -2,39 +2,40 @@ import datetime, random, sha
 from django import forms
 from django.template import Context
 from django.shortcuts import render_to_response, get_object_or_404
-from django.core.mail import send_mail
-
 from users.models import UserProfile
 from users.forms import RegistrationFormFranchisee
-from dajaxice.core import dajaxice_functions
+from django.template import RequestContext
 
 def registerFranchisee(request):
     # enabled when not in production or not in the system
-    """
+    
     if request.user.is_authenticated():
         # They already have an account; don't let them register again
-        return render_to_response('users/register.html', {'has_account':True})
-    """
+        return render_to_response('users/register_franchisee.html', {'has_account':True})
+    
     form = RegistrationFormFranchisee()
     
-    context = Context({'title':'register','legend':u'Registrate como Franquiciado!','form':form})
-    # Return context with clean Form register
-    return render_to_response('users/register_franchisee.html', context)
+    context = {'title':'register','legend':u'Registrate como Franquiciado!','form':form, 'has_account':False}
+    # Return context with clean Form register, This solves the problem of csrf_token
+    return render_to_response('users/register_franchisee.html', context, context_instance=RequestContext(request))
     
 """
 
 """
 def confirmFranchisee(request, activation_key):
+
     if request.user.is_authenticated():
         return render_to_response('users/confirm.html', {'has_account': True})
     
-    user_profile = get_object_or_404(UserProfile,
-                                     activation_key=activation_key)
+    user_profile = get_object_or_404(UserProfile, activationKey=activation_key)
+    print user_profile.keyExpires
+    print datetime.datetime.today()
     
-    if user_profile.key_expires < datetime.datetime.today():
+    if user_profile.keyExpires < datetime.datetime.today():
         return render_to_response('users/confirm.html', {'expired': True})
     
-    user_account = user_profile.user
+    user_account = user_profile.identification
+    print user_account
     user_account.is_active = True
     user_account.save()
-    return render_to_response('confirm.html', {'success': True})
+    return render_to_response('users/confirm.html', {'success': True})
