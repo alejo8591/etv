@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from dajax.core import Dajax
+from django.core.context_processors import csrf
 from dajaxice.utils import deserialize_form
 from dajaxice.decorators import dajaxice_register
 from users.forms import RegistrationFormFranchisee
@@ -43,7 +44,7 @@ def send_form(request,form):
                     # removing the entry fields
                     dajax.remove('#id_%s' % field)
                     # adding fields not editable
-                    dajax.append('#f_%s' % field, 'innerHTML','<span id="id_%s" class="input-large uneditable-input">No puede Modificar</span>' % field)
+                    dajax.append('#f_%s' % field, 'innerHTML','<span id="id_%s" class="input-medium uneditable-input">No puede Modificar</span>' % field)
                     dajax.remove_css_class('#label_%s' % field, 'label label-important')
                     dajax.add_css_class('#label_%s' % field, 'label label-success')
                     dajax.remove_css_class('#f_%s' % field, 'control-group error')
