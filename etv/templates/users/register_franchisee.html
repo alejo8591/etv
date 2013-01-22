@@ -4,11 +4,11 @@
 	    {% if has_account %}
 		<div class="alert alert-block">
 		    <p>
-		    <h3>¡Cuidado!</h3>
+		    <h3>¡Alerta!</h3>
 		    <h4>¡Ya estas registrado y eres un Franquiciado activo en el sistema!</h4>
 		    </p><br />
 		    <p>
-			<button class="btn btn-primary" type="button">Regregar al Menú General</button>
+			<button class="btn btn-danger" type="button">Regregar al Menú General</button>
 		    </p>
 		</div>
 	    {% else %}
@@ -16,43 +16,43 @@
                 <form method='post' id="my_form" accept-charset="utf-8">{% csrf_token %}
                 <fieldset>
                     <legend class="lead">{{ legend }}</legend>
-                    {{ form.non_field_errors }}
+                    {{ form_register.non_field_errors }}
 		    <div id='errors' class="alert alert-info">
 			<b>Saludos!</b> Por favor diligenciar los campos marcados con <b>*</b> son necesarios
 		    </div>
 			<div class="controls">
 			    <div id="f_identification">
-			    {{ form.identification.errors }}
+			    {{ form_register.identification.errors }}
 			    <label class="control-label" for="id_identification">Cedula o Identificación</label>
-				{{form.identification}}
+				{{form_register.identification}}
 			    </div>
 			</div>
 			<div class="controls">
 			    <div id="f_email">
-			    {{ form.email.errors }}
+			    {{ form_register.email.errors }}
 			    <label class="control-label" for="id_email">Correo electronico</label>
-				{{form.email}}
+				{{form_register.email}}
 			    </div>
 			</div>
 			<div class="controls">
 			    <div id="f_passwordOne">
-			    {{ form.passwordOne.errors }}
+			    {{ form_register.passwordOne.errors }}
 			    <label class="control-label" for="id_passwordOne">Contraseña</label>
-				{{form.passwordOne}}
+				{{form_register.passwordOne}}
 			    </div>
 			</div>
 			<div class="controls">
 			    <div id="f_passwordTwo">
-			    {{ form.passwordTwo.errors }}
+			    {{ form_register.passwordTwo.errors }}
 			    <label class="control-label" for="id_passwordTwo">Verificación Contraseña</label>
-				{{form.passwordTwo}}
+				{{form_register.passwordTwo}}
 			    </div>
 			</div>
 			<div class="controls">
 			    <div id="f_franchiseeCode">
-			    {{ form.franchiseeCode.errors }}
+			    {{ form_register.franchiseeCode.errors }}
 			    <label class="control-label" for="id_franchiseeCode">Código de Referencia</label>
-				{{form.franchiseeCode}}
+				{{form_register.franchiseeCode}}
 			    </div>
 			</div>
 			<input data-toggle="modal" class="btn btn-primary" role="button" id="buttonSend" value="Registarme!" />
@@ -72,5 +72,42 @@
 		<button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Cerrar</button>
 	      </div>
 	    </div>
+	    {% if form.errors %}
+		{% endif %}
+	    <div id="loginModal" class="modal hide fade">
+                        <div class="modal-header">
+                          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                          <h3>Ingreso al Sistema {{ register }}</h3>
+                        </div>
+                        <div class="modal-body">
+                          <form id="login" class="form-horizontal" method="post" action="{% url django.contrib.auth.views.login %}">{% csrf_token %}
+            
+                                <div class="control-group">
+                                  <label class="control-label" for="id_identification">Identificación</label>
+                                  <div class="controls">
+                                    {{form.username}}
+                                  </div>
+                                </div>
+                                <div class="control-group">
+                                  <label class="control-label" for="id_password">Contraseña</label>
+                                  <div class="controls">
+                                    {{form.password}}
+                                  </div>
+                                </div>
+                                <div class="control-group">
+                                  <div class="controls">
+                                    <label class="checkbox">
+                                      <input type="checkbox"> Recordar cuenta
+                                    </label>
+                                    <button id="buttonLogin" type="submit" class="btn btn-primary">Ingresar</button>
+				    <input type="hidden" name="next" value="{{ next }}" />
+                                  </div>
+                                </div>
+                              </form>
+                        </div>
+                        <div class="modal-footer">
+                        </div>
+                      </div>
+                    </div>
 	    {% endif %}
 	{% endblock %}
