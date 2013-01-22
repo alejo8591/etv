@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 from dajax.core import Dajax
-from django.core.context_processors import csrf
 from dajaxice.utils import deserialize_form
+from django.contrib.auth import authenticate, login
+from django.shortcuts import render_to_response
 from dajaxice.decorators import dajaxice_register
-from users.forms import RegistrationFormFranchisee
+from users.forms import RegistrationFormFranchisee, LoginForm
 from users.classes.UserRegistration import UserRegistration
 
 """
@@ -64,22 +65,24 @@ def send_form(request,form):
                 dajax.assign('#errors', 'innerHTML', '<b>Muchas Gracias te Registraste con exito!</b>')
                 
                 message_correct = """
-                                
+                                    <h5>Para tener en cuenta:</h5><span class="badge badge-inverse">1</span> Revisa tu correo electronico <span class="label label-info">%s</span>                
                                   """
-                dajax.assign('#modalBody', 'innerHTML', '<h5>Para tener en cuenta:</h5><span class="badge badge-inverse">1</span> Revisa tu correo electronico <span class="label label-info">%s</span>' % data['email'])
+                dajax.assign('#modalBody', 'innerHTML', message_correct % data['email'])
                 # Modal with info subcriptor
                 dajax.script("$('#myModal').modal('show')")
                 # send email
                 formf.send_mails('alejo8591@gmail.com')
+                # return data
+                return dajax.json()
                         
             # If the user or user code already exists or use   
             else:
-                message_errors = """<h5><i class="icon-warning-sign"></i> Verificar los siguientes <span class="label label-important">ERRORES</span> en tu Registro como Franquiciado:</h5><br />
-                                    <span class="badge badge-important">1</span> <b>La identificación o Documento ya existe</b><br />
-                                    <span class="badge badge-important">2</span> <b>Cuenta de correo electrónico ya existe</b><br />
-                                    <span class="badge badge-important">3</span> <b>Las contraseñas no concuerdan</b><br />
-                                    <span class="badge badge-important">4</span> <b>El Código de referencia ya esta en uso</b><br />
-                                    <span class="badge badge-important">5</span> <b>El Código de referencia indicado No existe</b>
+                message_errors = """<h5><i class="icon-warning-sign"></i> Verificar los posibles <span class="label label-important">ERRORES</span> en tu Registro como Franquiciado:</h5><br />
+                                    <span class="badge badge-important">1</span> <b>La identificación o Documento ya existen en el sistema</b><br />
+                                    <span class="badge badge-important">2</span> <b>Cuenta de correo electrónico ya existen en el sistema</b><br />
+                                    <span class="badge badge-important">3</span> <b>Las contraseñas no concuerdan o son de menos de 6 digitos</b><br />
+                                    <span class="badge badge-important">4</span> <b>El Código de referencia ya esta en uso por otro Franquiciado</b><br />
+                                    <span class="badge badge-important">5</span> <b>El Código de referencia indicado No existe en el sistema</b>
                                      
                                  """
                 dajax.assign('#modalBody', 'innerHTML', message_errors)
@@ -96,6 +99,26 @@ def send_form(request,form):
                 dajax.append('#f_%s' % error, 'innerHTML', '<span id="label_%s" class="label label-important">Corregir este Campo</span>'% error)
         
         return dajax.json()
-    
     else:
+        return dajax.json()
+    
+@dajaxice_register(method='POST')
+def enter_form(request, login_form):
+    dajax = Dajax()
+    form = LoginForm(deserialize_form(login_form))
+    if request.method =='POST':
+        if form.is_valid:
+            username = form.cleaned_data['identification']
+            password = form.cleaned_data['password']
+            user = authenticate(username=username, password=password)
+            
+            if user is not None:
+                if user.is_active:
+                    #login(request, user)
+                    print user
+                    dajax.redirect('http://google.com', delay=2000)
+                    return dajax.json()
+                else:
+                    s = 'listo'
+            #dajax.redirect('http://127.0.0.1/elevate/', delay=0)
         return dajax.json()

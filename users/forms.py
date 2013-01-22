@@ -6,7 +6,7 @@ from users.models import CreateCodes, UserProfile
 
 class RegistrationFormFranchisee(forms.Form):
     # Fields for the creation of the user who is not registered
-    identification = forms.CharField(min_length=8, max_length=12, widget=forms.TextInput(attrs={'placeholder':'Usuario en el Sistema', 'class':'span3, {required:true, minlength:2, maxlength:100}'}))
+    identification = forms.CharField(min_length=8, max_length=12, widget=forms.TextInput(attrs={'placeholder':'Usuario en el Sistema', 'class':'span3'}))
     email          = forms.EmailField(min_length=6, max_length=40, widget=forms.TextInput(attrs={'placeholder':'email', 'class':'span3'}))
     passwordOne    = forms.CharField(min_length=6, max_length=20, widget=forms.PasswordInput(render_value=False, attrs={'placeholder':'Escriba la Contraseña', 'class':'span3'}))
     passwordTwo    = forms.CharField(min_length=6, max_length=20, widget=forms.PasswordInput(render_value=False, attrs={'placeholder':'Repita la Contraseña', 'class':'span3'}))
@@ -50,3 +50,8 @@ class RegistrationFormFranchisee(forms.Form):
         newUser.is_active = False
         newUser.save()
         return newUser
+    
+class LoginForm(forms.Form):
+    identification = forms.CharField(min_length=8, max_length=12, widget=forms.TextInput(attrs={'placeholder':'Identificación', 'class':'span3'}))
+    password       = forms.CharField(min_length=6, max_length=20, widget=forms.PasswordInput(render_value=False, attrs={'placeholder':'Contraseña', 'class':'span3'}))
+    
